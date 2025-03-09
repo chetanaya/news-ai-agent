@@ -166,7 +166,7 @@ st.markdown(f'<p class="subheader">{app_config["app"]["description"]}</p>', unsa
 
 # Determine which data to display
 def load_data():
-    if st.session_state.view_mode == "historical" and hasattr(st.session_state, 'selected_timestamp'):
+    if st.session_state.view_mode == "historical" and hasattr(st.session_state, 'selected_timestamp') and st.session_state.selected_timestamp:
         return data_manager.get_data_by_timestamp(st.session_state.selected_timestamp)
     else:
         return data_manager.get_latest_data()

@@ -1,45 +1,32 @@
-import os
-import shutil
-import argparse
+from setuptools import setup, find_packages
 
-def setup_project():
-    """Set up the Brand News Analyzer project structure"""
-    print("Setting up Brand News Analyzer...")
-    
-    # Create necessary directories
-    directories = [
-        "data",
-        "data/raw",
-        "data/processed",
-        "data/archive",
-        "logs",
-        "config"
-    ]
-    
-    for directory in directories:
-        os.makedirs(directory, exist_ok=True)
-        print(f"Created directory: {directory}")
-    
-    # Check if .env file exists, if not create from example
-    if not os.path.exists(".env") and os.path.exists(".env.example"):
-        shutil.copy(".env.example", ".env")
-        print("Created .env file from .env.example - please edit it with your API keys")
-    
-    # Create empty __init__.py files in directories if they don't exist
-    init_dirs = [".", "app", "app/pages", "agents", "utils"]
-    for directory in init_dirs:
-        init_file = os.path.join(directory, "__init__.py")
-        if not os.path.exists(init_file):
-            with open(init_file, "w") as f:
-                f.write("# Auto-generated init file\n")
-            print(f"Created {init_file}")
-    
-    print("\nSetup complete! Next steps:")
-    print("1. Edit the .env file with your API keys")
-    print("2. Install requirements: pip install -r requirements.txt")
-    print("3. Run the app: streamlit run app/app.py")
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Set up the Brand News Analyzer project")
-    args = parser.parse_args()
-    setup_project()
+setup(
+    name="brand-news-analyzer",
+    version="0.1.0",
+    description="AI-powered brand news analysis application",
+    author="Your Name",
+    author_email="your.email@example.com",
+    packages=find_packages(),
+    install_requires=[
+        "streamlit>=1.29.0",
+        "langchain-core>=0.1.16",
+        "langchain>=0.1.0",
+        "langchain-openai>=0.0.5",
+        "langchain-community>=0.0.13", 
+        "beautifulsoup4>=4.12.2",
+        "requests>=2.31.0",
+        "pandas>=2.1.3",
+        "pyyaml>=6.0.1",
+        "python-dotenv>=1.0.0",
+        "feedparser>=6.0.10",
+        "textblob>=0.17.1",
+        "plotly>=5.18.0",
+        "altair>=5.1.2",
+        "nltk>=3.8.1",
+        "pytest>=7.4.3",
+        "tqdm>=4.66.1",
+        "openai>=1.3.5",
+        "duckduckgo-search>=4.1.1"
+    ],
+    python_requires=">=3.8",
+)

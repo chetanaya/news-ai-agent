@@ -6,6 +6,16 @@ from typing import List, Dict, Any, Optional
 import time
 import hashlib
 from urllib.parse import quote
+import json
+from requests.exceptions import RequestException
+
+# For DuckDuckGo search
+try:
+    from duckduckgo_search import DDGS
+    DDGS_AVAILABLE = True
+except ImportError:
+    DDGS = None
+    DDGS_AVAILABLE = False
 
 from utils.logger import LoggerMixin
 from utils.yaml_handler import get_sources_config, get_agent_config
@@ -24,6 +34,9 @@ class NewsFetcher(LoggerMixin):
         self.timeout = self.agent_config['fetch_config']['request_timeout']
         self.user_agent = self.agent_config['fetch_config']['user_agent']
         
+        # Get default search engine from config
+        self.default_search_engine = self.sources_config.get('default_search_engine', 'Google News')
+        
         # Set up headers for requests
         self.headers = {
             'User-Agent': self.user_agent
@@ -41,28 +54,69 @@ class NewsFetcher(LoggerMixin):
         """
         brand_name = brand['name']
         self.logger.info(f"Fetching news for brand: {brand_name}")
+        print(f"Fetching news for brand: {brand_name}")
         
         all_articles = []
         
         # Use each keyword to search for news
         for keyword in brand['keywords']:
-            self.logger.debug(f"Searching for keyword: {keyword}")
+            self.logger.info(f"Searching for keyword: {keyword}")
+            print(f"Searching for keyword: {keyword}")
             
-            # Try each news source
-            for source in self.sources_config['news_sources']:
+            # First try the default search engine
+            default_source = next(
+                (src for src in self.sources_config['news_sources'] 
+                 if src.get('name') == self.default_search_engine and src.get('enabled', True)),
+                None
+            )
+            
+            if default_source:
                 try:
-                    if source['type'] == 'rss':
-                        articles = self._fetch_from_rss(source, keyword)
-                    elif source['type'] == 'api':
-                        articles = self._fetch_from_api(source, keyword)
-                    else:
-                        self.logger.warning(f"Unknown source type: {source['type']}")
-                        continue
+                    self.logger.info(f"Using default search engine: {default_source['name']} (type: {default_source['type']})")
+                    print(f"Using default search engine: {default_source['name']} (type: {default_source['type']})")
                     
+                    # Special handling for DuckDuckGo
+                    if default_source['type'] == 'duckduckgo' and not DDGS_AVAILABLE:
+                        self.logger.warning("DuckDuckGo selected but not available. Try installing with: pip install duckduckgo-search")
+                        print("WARNING: DuckDuckGo selected but not available. Try installing with: pip install duckduckgo-search")
+                    
+                    articles = self._fetch_from_source(default_source, keyword)
                     all_articles.extend(articles)
                     
+                    self.logger.info(f"Found {len(articles)} articles from {default_source['name']} for keyword '{keyword}'")
+                    print(f"Found {len(articles)} articles from {default_source['name']} for keyword '{keyword}'")
+                    
                 except Exception as e:
-                    self.logger.error(f"Error fetching from {source['name']}: {str(e)}")
+                    self.logger.error(f"Error fetching from default source {default_source['name']}: {str(e)}")
+                    print(f"Error fetching from default source {default_source['name']}: {str(e)}")
+                    import traceback
+                    self.logger.error(traceback.format_exc())
+            
+            # Then try other enabled sources if needed
+            if len(all_articles) < self.max_articles:
+                # Try each news source
+                for source in self.sources_config['news_sources']:
+                    # Skip if this is the default source (already tried) or if disabled
+                    if source.get('name') == self.default_search_engine or not source.get('enabled', True):
+                        continue
+                    
+                    try:
+                        self.logger.info(f"Trying alternative source: {source['name']} (type: {source['type']})")
+                        print(f"Trying alternative source: {source['name']} (type: {source['type']})")
+                        
+                        source_articles = self._fetch_from_source(source, keyword)
+                        all_articles.extend(source_articles)
+                        
+                        self.logger.info(f"Found {len(source_articles)} articles from {source['name']} for keyword '{keyword}'")
+                        print(f"Found {len(source_articles)} articles from {source['name']} for keyword '{keyword}'")
+                        
+                        # Break if we have enough articles
+                        if len(all_articles) >= self.max_articles:
+                            break
+                            
+                    except Exception as e:
+                        self.logger.error(f"Error fetching from {source['name']}: {str(e)}")
+                        print(f"Error fetching from {source['name']}: {str(e)}")
         
         # Deduplicate articles
         unique_articles = self._deduplicate_articles(all_articles)
@@ -70,8 +124,33 @@ class NewsFetcher(LoggerMixin):
         # Limit the number of articles
         limited_articles = unique_articles[:self.max_articles]
         
-        self.logger.info(f"Found {len(limited_articles)} articles for {brand_name}")
+        self.logger.info(f"Found {len(limited_articles)} articles for {brand_name} after deduplication")
+        print(f"Found {len(limited_articles)} articles for {brand_name} after deduplication")
+        
         return limited_articles
+    
+    def _fetch_from_source(self, source: Dict[str, Any], keyword: str) -> List[Dict[str, Any]]:
+        """
+        Fetch news from a specific source based on its type
+        
+        Args:
+            source: Source configuration
+            keyword: Search keyword
+            
+        Returns:
+            List of articles from the source
+        """
+        source_type = source.get('type', '')
+        
+        if source_type == 'rss':
+            return self._fetch_from_rss(source, keyword)
+        elif source_type == 'api':
+            return self._fetch_from_api(source, keyword)
+        elif source_type == 'duckduckgo':
+            return self._fetch_from_duckduckgo(source, keyword)
+        else:
+            self.logger.warning(f"Unknown source type: {source_type}")
+            return []
     
     def _fetch_from_rss(self, source: Dict[str, Any], keyword: str) -> List[Dict[str, Any]]:
         """
@@ -160,6 +239,84 @@ class NewsFetcher(LoggerMixin):
                 articles.append(article)
         
         return articles
+    
+    def _fetch_from_duckduckgo(self, source: Dict[str, Any], keyword: str) -> List[Dict[str, Any]]:
+        """
+        Fetch news using DuckDuckGo search
+        
+        Args:
+            source: Source configuration
+            keyword: Search keyword
+            
+        Returns:
+            List of articles from DuckDuckGo
+        """
+        if not DDGS_AVAILABLE:
+            self.logger.error("DuckDuckGo search module not available. Please install with 'pip install duckduckgo-search'")
+            print("ERROR: DuckDuckGo search module not available. Please install with 'pip install duckduckgo-search'")
+            return []
+        
+        self.logger.info(f"Searching DuckDuckGo for keyword: {keyword}")
+        print(f"Searching DuckDuckGo for keyword: {keyword}")
+        
+        # Extract parameters
+        params = source.get('params', {})
+        max_results = params.get('max_results', 10)
+        region = params.get('region', 'us-en')
+        timelimit = params.get('timelimit', None)
+        safesearch = params.get('safesearch', 'moderate')
+        
+        try:
+            # Log the search parameters
+            self.logger.info(f"DuckDuckGo search params: max_results={max_results}, region={region}, timelimit={timelimit}")
+            print(f"DuckDuckGo search params: max_results={max_results}, region={region}, timelimit={timelimit}")
+            
+            # Create a DuckDuckGo search instance
+            ddgs = DDGS()
+            
+            # Append 'news' to keyword for better news results
+            search_query = f"{keyword} news"
+            
+            # Execute the search with the correct parameters
+            self.logger.info(f"Executing DuckDuckGo news search with query: {search_query}")
+            print(f"Executing DuckDuckGo news search with query: {search_query}")
+            
+            results = list(ddgs.news(
+                keywords=search_query,
+                region=region,
+                safesearch=safesearch,
+                timelimit=timelimit,
+                max_results=max_results
+            ))
+            
+            self.logger.info(f"DuckDuckGo returned {len(results)} results")
+            print(f"DuckDuckGo returned {len(results)} results")
+            
+            articles = []
+            for item in results:
+                article = {
+                    'title': item.get('title', ''),
+                    'url': item.get('url', ''),
+                    'source': item.get('source', 'DuckDuckGo'),
+                    'source_type': 'duckduckgo',
+                    'published_date': item.get('date', ''),
+                    'description': item.get('body', ''),
+                    'fetch_date': datetime.datetime.now().isoformat(),
+                    'image_url': item.get('image', '')
+                }
+                articles.append(article)
+                
+            self.logger.info(f"Processed {len(articles)} articles from DuckDuckGo")
+            print(f"Processed {len(articles)} articles from DuckDuckGo")
+            return articles
+                
+        except Exception as e:
+            self.logger.error(f"Error fetching from DuckDuckGo: {str(e)}")
+            print(f"ERROR fetching from DuckDuckGo: {str(e)}")
+            import traceback
+            self.logger.error(traceback.format_exc())
+            print(traceback.format_exc())
+            return []
     
     def _parse_date(self, date_str: str) -> str:
         """

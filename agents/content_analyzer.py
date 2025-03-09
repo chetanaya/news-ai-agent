@@ -3,8 +3,7 @@ from typing import Dict, Any, List, Tuple, Optional
 import json
 from textblob import TextBlob
 import nltk
-from langchain.chains import LLMChain
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 import time
 
@@ -40,7 +39,7 @@ class ContentAnalyzer(LoggerMixin):
         self.summary_max_words = self.agent_config['analysis_config'].get('summary_max_words', 250)
     
     def _setup_llm(self):
-        """Set up LangChain and LLM components"""
+        """Set up LLM instance"""
         # Get LLM config
         llm_config = self.agent_config['llm']
         model_name = llm_config['model_name']
@@ -52,61 +51,38 @@ class ContentAnalyzer(LoggerMixin):
             api_key=os.environ.get("OPENAI_API_KEY")
         )
         
-        # Create topic extraction chain
-        topic_template = """
+        # Define prompt templates
+        self.topic_prompt = PromptTemplate.from_template("""
         Extract the main topics from the following news article. Return between 2-5 topics.
         Format the response as a JSON array of strings.
         
         Article: {article_content}
         
         Topics:
-        """
-        self.topic_chain = LLMChain(
-            llm=self.llm,
-            prompt=PromptTemplate(
-                input_variables=["article_content"],
-                template=topic_template
-            )
-        )
+        """)
         
-        # Create summary chain
-        summary_template = """
+        self.summary_prompt = PromptTemplate.from_template("""
         Summarize the following news article in at least {min_words} words but no more than {max_words} words.
         The summary should cover the key points and maintain the tone of the original article.
         
         Article: {article_content}
         
         Summary:
-        """
-        self.summary_chain = LLMChain(
-            llm=self.llm,
-            prompt=PromptTemplate(
-                input_variables=["article_content", "min_words", "max_words"],
-                template=summary_template
-            )
-        )
+        """)
         
-        # Create combined analysis chain
-        analysis_template = """
+        self.analysis_prompt = PromptTemplate.from_template("""
         Analyze the following news article and provide:
         1. A summary (at least {min_words} words)
         2. 2-5 main topics covered in the article
-        3. The overall sentiment (positive, negative, or neutral)
-        4. A sentiment polarity score between -1.0 (very negative) and 1.0 (very positive)
+        3. The overall sentiment (Positive, Negative, or Neutral)
+        4. A sentiment polarity score between -1.0 (Very Negative) and 1.0 (Very Positive)
         
         Format your response as a JSON object with the keys: "summary", "topics", "sentiment", "polarity".
         
         Article: {article_content}
         
         Analysis:
-        """
-        self.analysis_chain = LLMChain(
-            llm=self.llm,
-            prompt=PromptTemplate(
-                input_variables=["article_content", "min_words"],
-                template=analysis_template
-            )
-        )
+        """)
     
     def analyze_article(self, article: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -125,7 +101,7 @@ class ContentAnalyzer(LoggerMixin):
             # Add empty analysis fields
             article['summary'] = ""
             article['topics'] = []
-            article['sentiment'] = "neutral"
+            article['sentiment'] = "Neutral"
             article['polarity_score'] = 0.0
             return article
         
@@ -150,7 +126,7 @@ class ContentAnalyzer(LoggerMixin):
                 # Use the combined analysis results
                 article['summary'] = result.get('summary', '')
                 article['topics'] = result.get('topics', [])
-                article['sentiment'] = result.get('sentiment', 'neutral')
+                article['sentiment'] = result.get('sentiment', 'Neutral')
                 article['polarity_score'] = result.get('polarity', 0.0)
             
             # Add analysis timestamp
@@ -171,7 +147,7 @@ class ContentAnalyzer(LoggerMixin):
     
     def _run_combined_analysis(self, content: str) -> Dict[str, Any]:
         """
-        Run the combined analysis chain
+        Run the combined analysis using the LLM
         
         Args:
             content: Article content
@@ -186,18 +162,27 @@ class ContentAnalyzer(LoggerMixin):
                 self.logger.info(f"Truncating content from {len(content)} to {max_length} chars")
                 content = content[:max_length]
             
-            # Run the analysis chain
-            result = self.analysis_chain.run(
+            # Format the prompt
+            formatted_prompt = self.analysis_prompt.format(
                 article_content=content,
                 min_words=self.summary_min_words
             )
             
+            # Invoke the LLM directly
+            result = self.llm.invoke(formatted_prompt)
+            
+            # Extract content from the message
+            if hasattr(result, 'content'):
+                result_text = result.content
+            else:
+                result_text = str(result)
+            
             # Parse the JSON response
             try:
-                analysis = json.loads(result)
+                analysis = json.loads(result_text)
                 return analysis
             except json.JSONDecodeError:
-                self.logger.error(f"Failed to parse JSON from LLM response: {result}")
+                self.logger.error(f"Failed to parse JSON from LLM response: {result_text}")
                 return None
                 
         except Exception as e:
@@ -220,18 +205,28 @@ class ContentAnalyzer(LoggerMixin):
             content = content[:max_length]
         
         try:
-            result = self.topic_chain.run(article_content=content)
+            # Format the prompt
+            formatted_prompt = self.topic_prompt.format(article_content=content)
+            
+            # Invoke the LLM directly
+            result = self.llm.invoke(formatted_prompt)
+            
+            # Extract content from the message
+            if hasattr(result, 'content'):
+                result_text = result.content
+            else:
+                result_text = str(result)
             
             # Parse JSON array from the result
             try:
-                topics = json.loads(result)
+                topics = json.loads(result_text)
                 if isinstance(topics, list):
                     return topics
                 return []
             except json.JSONDecodeError:
                 # If not valid JSON, try to extract topics with regex
                 import re
-                topics = re.findall(r'"([^"]+)"', result)
+                topics = re.findall(r'"([^"]+)"', result_text)
                 return topics[:5]  # Limit to 5 topics
                 
         except Exception as e:
@@ -254,12 +249,21 @@ class ContentAnalyzer(LoggerMixin):
             content = content[:max_length]
         
         try:
-            summary = self.summary_chain.run(
+            # Format the prompt
+            formatted_prompt = self.summary_prompt.format(
                 article_content=content,
                 min_words=self.summary_min_words,
                 max_words=self.summary_max_words
             )
-            return summary.strip()
+            
+            # Invoke the LLM directly
+            result = self.llm.invoke(formatted_prompt)
+            
+            # Extract content from the message
+            if hasattr(result, 'content'):
+                return result.content.strip()
+            else:
+                return str(result).strip()
             
         except Exception as e:
             self.logger.error(f"Error generating summary: {str(e)}")
@@ -301,11 +305,11 @@ class ContentAnalyzer(LoggerMixin):
         
         # Determine sentiment category based on polarity
         if polarity >= self.positive_threshold:
-            sentiment = "positive"
+            sentiment = "Positive"
         elif polarity <= self.negative_threshold:
-            sentiment = "negative"
+            sentiment = "Negative"
         else:
-            sentiment = "neutral"
+            sentiment = "Neutral"
             
         return sentiment, polarity
     
@@ -320,14 +324,28 @@ class ContentAnalyzer(LoggerMixin):
             List of articles with added analysis fields
         """
         self.logger.info(f"Analyzing {len(articles)} articles")
+        print(f"Analyzing {len(articles)} articles")
+        
         results = []
         
         for i, article in enumerate(articles):
-            analyzed_article = self.analyze_article(article)
-            results.append(analyzed_article)
-            
-            # Log progress
-            if (i + 1) % 5 == 0 or i == len(articles) - 1:
-                self.logger.info(f"Analyzed {i + 1}/{len(articles)} articles")
+            try:
+                analyzed_article = self.analyze_article(article)
+                results.append(analyzed_article)
+                
+                # Log progress
+                if (i + 1) % 5 == 0 or i == len(articles) - 1:
+                    self.logger.info(f"Analyzed {i + 1}/{len(articles)} articles")
+                    print(f"Analyzed {i + 1}/{len(articles)} articles")
+            except Exception as e:
+                self.logger.error(f"Error analyzing article {i+1}/{len(articles)}: {str(e)}")
+                print(f"Error analyzing article {i+1}/{len(articles)}: {str(e)}")
+                # Add the original article to ensure we don't lose data
+                article['summary'] = ""
+                article['topics'] = []
+                article['sentiment'] = "Neutral"
+                article['polarity_score'] = 0.0
+                article['analysis_error'] = str(e)
+                results.append(article)
         
         return results

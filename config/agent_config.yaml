@@ -1,20 +1,19 @@
-llm:
-  provider: "openai"
-  model_name: "gpt-4"
-  api_key: "${OPENAI_API_KEY}"
-  
-fetch_config:
-  news_refresh_interval: 3600  # in seconds
-  max_articles_per_brand: 10
-  request_timeout: 10  # in seconds
-  user_agent: "BrandNewsAnalyzer/1.0"
-  
 analysis_config:
-  summary_min_words: 100
-  summary_max_words: 250
-  sentiment_threshold_positive: 0.1
   sentiment_threshold_negative: -0.1
-  
+  sentiment_threshold_positive: 0.1
+  summary_max_words: 250
+  summary_min_words: 100
+fetch_config:
+  max_articles_per_brand: 10
+  news_refresh_interval: 3600
+  request_timeout: 10
+  retry_count: 3
+  retry_delay: 2
+  user_agent: BrandNewsAnalyzer/1.0
+llm:
+  api_key: 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
+  model_name: gpt-4o-mini
+  provider: openai
 storage_config:
-  data_format: "csv"
-  archive_days: 30  # keep archives for 30 days
+  archive_days: 30
+  data_format: csv

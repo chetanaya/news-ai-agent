@@ -3,6 +3,7 @@ import os
 import sys
 import yaml
 import pandas as pd
+import io  # Added missing import for Excel export
 from datetime import datetime
 
 # Add parent directory to path for imports
@@ -238,10 +239,47 @@ with tab3:
             f.write(f"\nNEWS_API_KEY={new_news_api_key}\n")
         st.success("News API Key saved!")
     
-    # News Sources
-    st.subheader("News Sources")
+    # News Source Settings
+    st.subheader("News Source Settings")
+    
+    # Default search engine
+    available_engines = [src['name'] for src in sources_config.get('news_sources', [])]
+    default_engine = sources_config.get('default_search_engine', available_engines[0] if available_engines else "")
+    
+    new_default_engine = st.selectbox(
+        "Default Search Engine",
+        available_engines,
+        index=available_engines.index(default_engine) if default_engine in available_engines else 0
+    )
+    
+    # News source toggle
+    st.subheader("Enable/Disable News Sources")
+    
+    sources_updated = False
+    for i, source in enumerate(sources_config.get('news_sources', [])):
+        source_name = source.get('name', f"Source {i+1}")
+        source_enabled = source.get('enabled', True)
+        
+        new_enabled = st.checkbox(f"Enable {source_name}", value=source_enabled, key=f"src_enabled_{i}")
+        
+        if new_enabled != source_enabled:
+            sources_config['news_sources'][i]['enabled'] = new_enabled
+            sources_updated = True
+    
+    # Save source settings
+    if (st.button("Save News Source Settings") or 
+        (sources_updated or new_default_engine != default_engine)):
+        
+        # Update default engine
+        sources_config['default_search_engine'] = new_default_engine
+        
+        # Save to file
+        save_yaml_config(sources_config, os.path.join("config", "sources.yaml"))
+        st.success("News source settings saved successfully!")
     
     # Display current sources
+    st.subheader("News Sources Configuration")
+    
     for i, source in enumerate(sources_config.get('news_sources', [])):
         with st.expander(f"Source: {source['name']}"):
             source_col1, source_col2 = st.columns(2)
@@ -249,22 +287,73 @@ with tab3:
             with source_col1:
                 # Basic settings
                 new_source_name = st.text_input(f"Source Name", source['name'], key=f"src_name_{i}")
-                new_source_type = st.selectbox(f"Source Type", ["rss", "api"], 
-                                             index=0 if source['type'] == "rss" else 1, 
+                new_source_type = st.selectbox(f"Source Type", ["rss", "api", "duckduckgo"], 
+                                             index=0 if source['type'] == "rss" else 1 if source['type'] == "api" else 2, 
                                              key=f"src_type_{i}")
             
             with source_col2:
-                # Endpoint
-                new_endpoint = st.text_input(f"API Endpoint", source['api_endpoint'], key=f"src_endpoint_{i}")
+                # Endpoint or parameters based on type
+                if source['type'] in ['rss', 'api']:
+                    # Endpoint for RSS or API
+                    new_endpoint = st.text_input(f"API Endpoint", 
+                                               source.get('api_endpoint', ''), 
+                                               key=f"src_endpoint_{i}")
+                elif source['type'] == 'duckduckgo':
+                    # Parameters for DuckDuckGo
+                    params = source.get('params', {})
+                    
+                    # Time limit options
+                    timelimit_options = [None, "d", "w", "m"]
+                    timelimit_labels = ["No limit", "Past day", "Past week", "Past month"]
+                    timelimit_index = timelimit_options.index(params.get('timelimit', 'w')) if params.get('timelimit', 'w') in timelimit_options else 2
+                    
+                    new_timelimit = st.selectbox(
+                        "Time Limit", 
+                        timelimit_labels,
+                        index=timelimit_index,
+                        key=f"ddg_time_{i}"
+                    )
+                    
+                    # Region options
+                    region_options = ["us-en", "uk-en", "wt-wt"]
+                    region_labels = ["United States", "United Kingdom", "Worldwide"]
+                    region_index = region_options.index(params.get('region', 'us-en')) if params.get('region', 'us-en') in region_options else 0
+                    
+                    new_region = st.selectbox(
+                        "Region", 
+                        region_labels,
+                        index=region_index,
+                        key=f"ddg_region_{i}"
+                    )
+                    
+                    # SafeSearch options
+                    safesearch_options = ["on", "moderate", "off"]
+                    safesearch_index = safesearch_options.index(params.get('safesearch', 'moderate')) if params.get('safesearch', 'moderate') in safesearch_options else 1
+                    
+                    new_safesearch = st.selectbox(
+                        "SafeSearch", 
+                        safesearch_options,
+                        index=safesearch_index,
+                        key=f"ddg_safe_{i}"
+                    )
+                    
+                    new_max_results = st.slider(
+                        "Max Results per Search", 
+                        5, 
+                        30, 
+                        params.get('max_results', 10),
+                        key=f"ddg_max_{i}"
+                    )
                 
                 # API Key field if applicable
-                if 'api_key' in source:
-                    new_api_key_field = st.text_input(f"API Key Variable", 
-                                                   source['api_key'].replace("${", "").replace("}", ""),
-                                                   key=f"src_apikey_{i}")
-                else:
-                    new_api_key_field = st.text_input(f"API Key Variable (leave empty if not needed)", 
-                                                   "", key=f"src_apikey_{i}")
+                if source['type'] == 'api':
+                    if 'api_key' in source:
+                        new_api_key_field = st.text_input(f"API Key Variable", 
+                                                      source['api_key'].replace("${", "").replace("}", ""),
+                                                      key=f"src_apikey_{i}")
+                    else:
+                        new_api_key_field = st.text_input(f"API Key Variable (leave empty if not needed)", 
+                                                      "", key=f"src_apikey_{i}")
             
             # Update if changed
             source_updated = False
@@ -277,23 +366,149 @@ with tab3:
                 source['type'] = new_source_type
                 source_updated = True
             
-            if new_endpoint != source['api_endpoint']:
-                source['api_endpoint'] = new_endpoint
-                source_updated = True
+            # Update type-specific fields
+            if source['type'] in ['rss', 'api']:
+                if 'api_endpoint' in source and new_endpoint != source['api_endpoint']:
+                    source['api_endpoint'] = new_endpoint
+                    source_updated = True
+                elif 'api_endpoint' not in source and new_endpoint:
+                    source['api_endpoint'] = new_endpoint
+                    source_updated = True
+            
+            if source['type'] == 'duckduckgo':
+                params = source.get('params', {})
+                
+                if 'params' not in source:
+                    source['params'] = {}
+                
+                # Map timelimit label to value
+                timelimit_map = {
+                    "No limit": None,
+                    "Past day": "d",
+                    "Past week": "w",
+                    "Past month": "m"
+                }
+                timelimit_value = timelimit_map.get(new_timelimit, 'w')
+                
+                # Map region label to value
+                region_map = {
+                    "United States": "us-en",
+                    "United Kingdom": "uk-en",
+                    "Worldwide": "wt-wt"
+                }
+                region_value = region_map.get(new_region, 'us-en')
+                
+                # Update parameters
+                if timelimit_value != params.get('timelimit', 'w'):
+                    source['params']['timelimit'] = timelimit_value
+                    source_updated = True
+                
+                if region_value != params.get('region', 'us-en'):
+                    source['params']['region'] = region_value
+                    source_updated = True
+                
+                if new_safesearch != params.get('safesearch', 'moderate'):
+                    source['params']['safesearch'] = new_safesearch
+                    source_updated = True
+                
+                if new_max_results != params.get('max_results', 10):
+                    source['params']['max_results'] = new_max_results
+                    source_updated = True
             
             # Handle API key field
-            if new_api_key_field:
-                api_key_var = f"${{{new_api_key_field}}}"
-                if 'api_key' not in source or source['api_key'] != api_key_var:
-                    source['api_key'] = api_key_var
+            if source['type'] == 'api':
+                if new_api_key_field:
+                    api_key_var = f"${{{new_api_key_field}}}"
+                    if 'api_key' not in source or source['api_key'] != api_key_var:
+                        source['api_key'] = api_key_var
+                        source_updated = True
+                elif 'api_key' in source and not new_api_key_field:
+                    del source['api_key']
                     source_updated = True
-            elif 'api_key' in source and not new_api_key_field:
-                del source['api_key']
-                source_updated = True
             
             if source_updated:
                 save_yaml_config(sources_config, os.path.join("config", "sources.yaml"))
                 st.success(f"Source '{new_source_name}' updated!")
+                
+    # Add new source button
+    st.subheader("Add New Source")
+    with st.form("add_source_form"):
+        new_source_name = st.text_input("Source Name")
+        new_source_type = st.selectbox("Source Type", ["rss", "api", "duckduckgo"])
+        
+        # Different fields based on type
+        if new_source_type in ["rss", "api"]:
+            new_endpoint = st.text_input("API Endpoint URL")
+            
+            if new_source_type == "api":
+                new_api_key_var = st.text_input("API Key Variable (e.g., NEWS_API_KEY)")
+        
+        elif new_source_type == "duckduckgo":
+            timelimit = st.selectbox(
+                "Time Limit", 
+                ["No limit", "Past day", "Past week", "Past month"],
+                index=2  # Default to "Past week"
+            )
+            
+            region = st.selectbox(
+                "Region", 
+                ["United States", "United Kingdom", "Worldwide"],
+                index=0  # Default to United States
+            )
+            
+            safesearch = st.selectbox(
+                "SafeSearch", 
+                ["on", "moderate", "off"],
+                index=1  # Default to moderate
+            )
+            
+            max_results = st.slider("Max Results per Search", 5, 30, 10)
+        
+        submitted = st.form_submit_button("Add Source")
+        
+        if submitted:
+            if not new_source_name:
+                st.error("Source name is required")
+            else:
+                # Create source config
+                new_source = {
+                    "name": new_source_name,
+                    "type": new_source_type,
+                    "enabled": True
+                }
+                
+                # Add type-specific fields
+                if new_source_type in ["rss", "api"]:
+                    if new_endpoint:
+                        new_source["api_endpoint"] = new_endpoint
+                    else:
+                        st.error("API Endpoint is required for RSS or API sources")
+                        st.stop()
+                    
+                    if new_source_type == "api" and new_api_key_var:
+                        new_source["api_key"] = f"${{{new_api_key_var}}}"
+                
+                elif new_source_type == "duckduckgo":
+                    # Map selected time period to format
+                    ddg_time_map = {
+                        "Last 24 hours": "d",
+                        "Last week": "w",
+                        "Last month": "m"
+                    }
+                    
+                    new_source["params"] = {
+                        "time_period": ddg_time_map.get(time_period, "w"),
+                        "max_results": max_results,
+                        "region": "us-en"
+                    }
+                
+                # Add to sources config
+                sources_config["news_sources"].append(new_source)
+                
+                # Save updated config
+                save_yaml_config(sources_config, os.path.join("config", "sources.yaml"))
+                st.success(f"Source '{new_source_name}' added successfully!")
+                st.experimental_rerun()
 
 # Advanced Settings Tab
 with tab4:
@@ -308,7 +523,7 @@ with tab4:
     llm_model = agent_config.get('llm', {}).get('model_name', 'gpt-4')
     new_llm_model = st.selectbox(
         "OpenAI Model",
-        ["gpt-4", "gpt-4-turbo", "gpt-3.5-turbo"],
+        ["gpt-4", "gpt-4-turbo", "gpt-4o-mini"],
         index=0 if llm_model == "gpt-4" else 1 if llm_model == "gpt-4-turbo" else 2
     )
     

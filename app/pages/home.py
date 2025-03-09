@@ -7,9 +7,81 @@ import pandas as pd
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from utils.yaml_handler import get_app_config, get_brands_config
+from utils.yaml_handler import get_app_config, get_brands_config, get_sources_config, save_yaml_config
 from utils.database import DataManager
 from agents.agent_orchestrator import AgentOrchestrator
+
+# Define the search engine functions directly in this file
+def search_engine_selector():
+    """
+    Component for selecting the default search engine
+    
+    Returns:
+        The selected search engine name
+    """
+    # Load current configuration
+    sources_config = get_sources_config()
+    
+    # Get available search engines (only enabled ones)
+    available_engines = [
+        src['name'] for src in sources_config.get('news_sources', [])
+        if src.get('enabled', True)
+    ]
+    
+    # Get current default
+    default_engine = sources_config.get('default_search_engine', 
+                                        available_engines[0] if available_engines else None)
+    
+    # If no engines available, show message
+    if not available_engines:
+        st.warning("No news sources are enabled. Please check settings.")
+        return None
+    
+    # Create selectbox
+    col1, col2 = st.columns([3, 1])
+    
+    with col1:
+        selected_engine = st.selectbox(
+            "Search Engine",
+            available_engines,
+            index=available_engines.index(default_engine) if default_engine in available_engines else 0,
+            help="Select which search engine to use for fetching news"
+        )
+    
+    with col2:
+        if st.button("Set Default") and selected_engine != default_engine:
+            # Update default in config
+            sources_config['default_search_engine'] = selected_engine
+            save_yaml_config(sources_config, os.path.join("config", "sources.yaml"))
+            
+            st.success(f"Default search engine set to {selected_engine}")
+            
+            # Rerun to update the interface
+            st.experimental_rerun()
+    
+    return selected_engine
+
+def get_search_engine_info(engine_name=None):
+    """
+    Get information about a specific search engine or the default one
+    
+    Args:
+        engine_name: Name of the search engine (optional, uses default if None)
+        
+    Returns:
+        Dictionary with search engine configuration
+    """
+    sources_config = get_sources_config()
+    
+    if engine_name is None:
+        engine_name = sources_config.get('default_search_engine')
+    
+    # Find the engine in the config
+    for source in sources_config.get('news_sources', []):
+        if source.get('name') == engine_name:
+            return source
+    
+    return None
 
 # Set page config
 st.set_page_config(
@@ -54,7 +126,48 @@ st.markdown(app_config["app"]["description"])
 # Main content
 st.header("Start Tracking Brands")
 
+# Add search engine selector
+st.subheader("Search Configuration")
+selected_engine = search_engine_selector()
+engine_info = get_search_engine_info(selected_engine)
+
+if engine_info:
+    st.markdown(f"""
+    **Using search engine:** {selected_engine} ({engine_info['type']})
+    """)
+    
+    if engine_info['type'] == 'duckduckgo':
+        # Show DuckDuckGo specific info
+        time_period_map = {
+            'd': 'Last 24 hours', 
+            'w': 'Last week', 
+            'm': 'Last month'
+        }
+        time_period = engine_info.get('params', {}).get('time_period', 'w')
+        max_results = engine_info.get('params', {}).get('max_results', 10)
+        
+        st.markdown(f"""
+        - Time period: {time_period_map.get(time_period, 'Last week')}
+        - Results per keyword: {max_results}
+        """)
+    elif engine_info['type'] == 'rss':
+        st.markdown(f"""
+        - RSS feed: {engine_info.get('api_endpoint', 'Not specified')}
+        """)
+    elif engine_info['type'] == 'api':
+        api_key_var = engine_info.get('api_key', '').replace('${', '').replace('}', '')
+        api_key_set = os.environ.get(api_key_var, '') != ''
+        
+        st.markdown(f"""
+        - API: {engine_info.get('api_endpoint', 'Not specified')}
+        - API Key: {'✅ Set' if api_key_set else '❌ Not set'}
+        """)
+        
+        if not api_key_set:
+            st.warning(f"API key not set for {selected_engine}. Set it in Settings > API Configuration.")
+
 # Brand selection
+st.subheader("Brand Selection")
 col1, col2 = st.columns([3, 1])
 
 with col1:
@@ -146,7 +259,7 @@ if not latest_data.empty:
         st.info(f"Last refresh: {st.session_state.last_refresh_time}")
     
     # Link to dashboard
-    st.markdown("### [View Full Dashboard](/Dashboard)")
+    st.markdown("### [View Full Dashboard](/dashboard)")
 
 # Help section
 with st.expander("How to use this app"):
