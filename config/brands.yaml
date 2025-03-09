@@ -1,0 +1,20 @@
+brands:
+  - name: Apple
+    keywords: ["Apple Inc", "iPhone", "MacBook", "Tim Cook"]
+    websites: ["apple.com"]
+    
+  - name: Microsoft
+    keywords: ["Microsoft", "Windows", "Azure", "Satya Nadella"]
+    websites: ["microsoft.com"]
+    
+  - name: Google
+    keywords: ["Google", "Alphabet", "Android", "Sundar Pichai"]
+    websites: ["google.com"]
+    
+  - name: Amazon
+    keywords: ["Amazon", "AWS", "Jeff Bezos", "Andy Jassy"]
+    websites: ["amazon.com"]
+    
+  - name: Tesla
+    keywords: ["Tesla", "Elon Musk", "Electric Vehicle", "EV"]
+    websites: ["tesla.com"]

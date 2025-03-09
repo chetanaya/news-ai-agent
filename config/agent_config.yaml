@@ -1,0 +1,20 @@
+llm:
+  provider: "openai"
+  model_name: "gpt-4"
+  api_key: "${OPENAI_API_KEY}"
+  
+fetch_config:
+  news_refresh_interval: 3600  # in seconds
+  max_articles_per_brand: 10
+  request_timeout: 10  # in seconds
+  user_agent: "BrandNewsAnalyzer/1.0"
+  
+analysis_config:
+  summary_min_words: 100
+  summary_max_words: 250
+  sentiment_threshold_positive: 0.1
+  sentiment_threshold_negative: -0.1
+  
+storage_config:
+  data_format: "csv"
+  archive_days: 30  # keep archives for 30 days

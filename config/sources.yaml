@@ -1,0 +1,14 @@
+news_sources:
+  - name: Google News
+    api_endpoint: "https://news.google.com/rss/search?q={keyword}&hl=en-US&gl=US&ceid=US:en"
+    type: "rss"
+    
+  - name: NewsAPI
+    api_endpoint: "https://newsapi.org/v2/everything"
+    type: "api"
+    api_key: "${NEWS_API_KEY}"
+    params:
+      q: "{keyword}"
+      language: "en"
+      sortBy: "publishedAt"
+      pageSize: 10
