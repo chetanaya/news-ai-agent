@@ -3,6 +3,7 @@ import os
 import sys
 import datetime
 from dotenv import load_dotenv
+import pandas as pd
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -270,8 +271,11 @@ if not df.empty:
                         st.markdown(row['summary'])
                     
                     if 'content' in row and row['content']:
-                        with st.expander("View Full Content"):
-                            st.markdown(row['content'])
+                        st.markdown("**Full Content:**")
+                        st.markdown(
+                            f"<details><summary>Click to expand</summary>{row['content']}</details>", 
+                            unsafe_allow_html=True
+                        )
         else:
             st.info("No articles match the selected filters.")
     

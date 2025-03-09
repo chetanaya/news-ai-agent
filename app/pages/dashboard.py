@@ -545,7 +545,10 @@ with tab4:
                 
                 # Full content
                 if 'content' in row and row['content']:
-                    with st.expander("View Full Content"):
-                        st.markdown(row['content'])
+                    st.markdown("**Full Content:**")
+                    st.markdown(
+                        f"<details><summary>Click to expand</summary>{row['content']}</details>", 
+                        unsafe_allow_html=True
+                    )
     else:
         st.info("No articles match the selected filters.")
