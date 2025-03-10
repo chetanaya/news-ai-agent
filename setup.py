@@ -12,7 +12,7 @@ setup(
         "langchain-core>=0.1.16",
         "langchain>=0.1.0",
         "langchain-openai>=0.0.5",
-        "langchain-community>=0.0.13", 
+        "langchain-community>=0.0.13",
         "beautifulsoup4>=4.12.2",
         "requests>=2.31.0",
         "pandas>=2.1.3",
@@ -26,7 +26,7 @@ setup(
         "pytest>=7.4.3",
         "tqdm>=4.66.1",
         "openai>=1.3.5",
-        "duckduckgo-search>=4.1.1"
+        "duckduckgo-search>=4.1.1",
     ],
     python_requires=">=3.8",
 )

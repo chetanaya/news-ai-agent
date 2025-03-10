@@ -1,8 +1,922 @@
 brands:
   - name: John Deere
-    keywords: ["John Deere"]
+    keywords: ["John Deere", "Deere & Company"]
     websites: ["deere.com"]
-    
+    categories:
+      - Corporate Strategy
+      - Financial Performance
+      - New Product Launches
+      - Technology & Innovation
+      - Sustainability & Environment
+      - Legal & Regulatory
+      - Supply Chain & Manufacturing
+      - Workforce & Labor
+      - Research & Development
+      - Customer & Community Engagement
+      - Marketing & Branding
+      - Partnerships & Alliances
+      - Risk Management & Challenges
+      - Market Trends & Industry Outlook
+    subcategories:
+      - Product Launch
+      - Technology Launch
+      - Price Change
+      - Policy Change
+      - Strategic Partnerships
+      - Mergers & Acquisitions
+      - Financial Results
+      - Stock Performance
+      - Investment Announcements
+      - Leadership Changes
+      - New Market Entry
+      - Production Expansion
+      - Supply Chain Disruptions
+      - Right-to-Repair Updates
+      - Environmental Regulations
+      - Sustainability Initiatives
+      - Carbon Neutrality Goals
+      - Electric/Hybrid Vehicle Launches
+      - Autonomous Machinery Deployment
+      - Precision Agriculture Solutions
+      - IoT and Telematics Integration
+      - Software/Platform Releases
+      - Subscription Services Rollout
+      - Labor Relations & Strikes
+      - Workforce Training Programs
+      - Diversity & Inclusion Initiatives
+      - Corporate Social Responsibility Programs
+      - Farmer Education & Outreach
+      - Community Support Projects
+      - Event Participation
+      - Awards & Recognitions
+      - Cybersecurity Developments
+      - Climate Impact Reports
+      - Commodity Price Fluctuations
+      - Market Forecast Reports
+      - Government Subsidies & Incentives
+      - Public-Private Partnerships
+      - Export/Import Policy Changes
+      - Patent Filings & R&D Breakthroughs
+      - Dealer Network Expansion
+      - Financing & Leasing Programs
+      - Customer Experience Enhancements
+      - Warranty & Service Policy Updates
+      - Brand Campaign Launches
+      - Digital Marketing Initiatives
+      - Competitor Activity & Market Share Updates
+    product_lines:
+      - Tractors
+      - Combine Harvesters
+      - Forage Harvesters
+      - Cotton Harvesters
+      - Sugar Cane Harvesters
+      - Balers
+      - Planters
+      - Seed Drills
+      - Sprayers
+      - Tillage Equipment
+      - Hay and Forage Equipment
+      - Windrowers
+      - Grain Carts
+      - Nutrient Applicators
+      - Manure Spreaders
+      - Self-Propelled Forage Harvesters
+      - Mowers
+      - Rakes
+      - Tedders
+      - Precision Agriculture Technology
+      - GPS Guidance Systems
+      - Telematics and Remote Monitoring
+      - Data Management Platforms
+      - Drones and Sensors
+      - Backhoe Loaders
+      - Excavators
+      - Dozers
+      - Motor Graders
+      - Skid Steer Loaders
+      - Compact Track Loaders
+      - Wheel Loaders
+      - Articulated Dump Trucks
+      - Scrapers
+      - Trenchers
+      - Pipeline Equipment
+      - Forestry Feller Bunchers
+      - Forestry Harvesters
+      - Forwarders
+      - Skidders
+      - Swing Machines
+      - Log Loaders
+      - Knuckleboom Loaders
+      - Forestry Attachments
+      - Mulchers
+      - Riding Lawn Mowers
+      - Zero-Turn Mowers
+      - Commercial Mowers
+      - Golf Course Equipment
+      - Aerators
+      - Utility Tractors
+      - Gator Utility Vehicles
+      - Snow Removal Equipment
+      - Diesel Engines
+      - Gasoline Engines
+      - Generator Drive Engines
+      - Drivetrain Components
+      - Transmissions
+      - Axles
+      - Attachments
+      - Parts and Aftermarket Support
+      - Software Solutions
+      - Digital Platforms
+      - Autonomous Equipment
+      - Financial Services
+
   - name: Kubota
     keywords: ["Kubota"]
     websites: ["kubota.com"]
+    categories:
+      - Corporate Strategy
+      - Financial Performance
+      - New Product Launches
+      - Technology & Innovation
+      - Sustainability & Environment
+      - Legal & Regulatory
+      - Supply Chain & Manufacturing
+      - Workforce & Labor
+      - Research & Development
+      - Customer & Community Engagement
+      - Marketing & Branding
+      - Partnerships & Alliances
+      - Risk Management & Challenges
+      - Market Trends & Industry Outlook
+    subcategories:
+      - Product Launch
+      - Technology Launch
+      - Price Change
+      - Policy Change
+      - Strategic Partnerships
+      - Mergers & Acquisitions
+      - Financial Results
+      - Stock Performance
+      - Investment Announcements
+      - Leadership Changes
+      - New Market Entry
+      - Production Expansion
+      - Supply Chain Disruptions
+      - Right-to-Repair Updates
+      - Environmental Regulations
+      - Sustainability Initiatives
+      - Carbon Neutrality Goals
+      - Electric/Hybrid Vehicle Launches
+      - Autonomous Machinery Deployment
+      - Precision Agriculture Solutions
+      - IoT and Telematics Integration
+      - Software/Platform Releases
+      - Subscription Services Rollout
+      - Labor Relations & Strikes
+      - Workforce Training Programs
+      - Diversity & Inclusion Initiatives
+      - Corporate Social Responsibility Programs
+      - Farmer Education & Outreach
+      - Community Support Projects
+      - Event Participation
+      - Awards & Recognitions
+      - Cybersecurity Developments
+      - Climate Impact Reports
+      - Commodity Price Fluctuations
+      - Market Forecast Reports
+      - Government Subsidies & Incentives
+      - Public-Private Partnerships
+      - Export/Import Policy Changes
+      - Patent Filings & R&D Breakthroughs
+      - Dealer Network Expansion
+      - Financing & Leasing Programs
+      - Customer Experience Enhancements
+      - Warranty & Service Policy Updates
+      - Brand Campaign Launches
+      - Digital Marketing Initiatives
+      - Competitor Activity & Market Share Updates
+    product_lines:
+      - Tractors
+      - Combine Harvesters
+      - Forage Harvesters
+      - Cotton Harvesters
+      - Sugar Cane Harvesters
+      - Balers
+      - Planters
+      - Seed Drills
+      - Sprayers
+      - Tillage Equipment
+      - Hay and Forage Equipment
+      - Windrowers
+      - Grain Carts
+      - Nutrient Applicators
+      - Manure Spreaders
+      - Self-Propelled Forage Harvesters
+      - Mowers
+      - Rakes
+      - Tedders
+      - Precision Agriculture Technology
+      - GPS Guidance Systems
+      - Telematics and Remote Monitoring
+      - Data Management Platforms
+      - Drones and Sensors
+      - Backhoe Loaders
+      - Excavators
+      - Dozers
+      - Motor Graders
+      - Skid Steer Loaders
+      - Compact Track Loaders
+      - Wheel Loaders
+      - Articulated Dump Trucks
+      - Scrapers
+      - Trenchers
+      - Pipeline Equipment
+      - Forestry Feller Bunchers
+      - Forestry Harvesters
+      - Forwarders
+      - Skidders
+      - Swing Machines
+      - Log Loaders
+      - Knuckleboom Loaders
+      - Forestry Attachments
+      - Mulchers
+      - Riding Lawn Mowers
+      - Zero-Turn Mowers
+      - Commercial Mowers
+      - Golf Course Equipment
+      - Aerators
+      - Utility Tractors
+      - Gator Utility Vehicles
+      - Snow Removal Equipment
+      - Diesel Engines
+      - Gasoline Engines
+      - Generator Drive Engines
+      - Drivetrain Components
+      - Transmissions
+      - Axles
+      - Attachments
+      - Parts and Aftermarket Support
+      - Software Solutions
+      - Digital Platforms
+      - Autonomous Equipment
+      - Financial Services
+
+
+  - name: CNH Industrial
+    keywords: ["CNH Industrial"]
+    websites: ["cnh.com"]
+    categories:
+      - Corporate Strategy
+      - Financial Performance
+      - New Product Launches
+      - Technology & Innovation
+      - Sustainability & Environment
+      - Legal & Regulatory
+      - Supply Chain & Manufacturing
+      - Workforce & Labor
+      - Research & Development
+      - Customer & Community Engagement
+      - Marketing & Branding
+      - Partnerships & Alliances
+      - Risk Management & Challenges
+      - Market Trends & Industry Outlook
+    subcategories:
+      - Product Launch
+      - Technology Launch
+      - Price Change
+      - Policy Change
+      - Strategic Partnerships
+      - Mergers & Acquisitions
+      - Financial Results
+      - Stock Performance
+      - Investment Announcements
+      - Leadership Changes
+      - New Market Entry
+      - Production Expansion
+      - Supply Chain Disruptions
+      - Right-to-Repair Updates
+      - Environmental Regulations
+      - Sustainability Initiatives
+      - Carbon Neutrality Goals
+      - Electric/Hybrid Vehicle Launches
+      - Autonomous Machinery Deployment
+      - Precision Agriculture Solutions
+      - IoT and Telematics Integration
+      - Software/Platform Releases
+      - Subscription Services Rollout
+      - Labor Relations & Strikes
+      - Workforce Training Programs
+      - Diversity & Inclusion Initiatives
+      - Corporate Social Responsibility Programs
+      - Farmer Education & Outreach
+      - Community Support Projects
+      - Event Participation
+      - Awards & Recognitions
+      - Cybersecurity Developments
+      - Climate Impact Reports
+      - Commodity Price Fluctuations
+      - Market Forecast Reports
+      - Government Subsidies & Incentives
+      - Public-Private Partnerships
+      - Export/Import Policy Changes
+      - Patent Filings & R&D Breakthroughs
+      - Dealer Network Expansion
+      - Financing & Leasing Programs
+      - Customer Experience Enhancements
+      - Warranty & Service Policy Updates
+      - Brand Campaign Launches
+      - Digital Marketing Initiatives
+      - Competitor Activity & Market Share Updates
+    product_lines:
+      - Tractors
+      - Combine Harvesters
+      - Forage Harvesters
+      - Cotton Harvesters
+      - Sugar Cane Harvesters
+      - Balers
+      - Planters
+      - Seed Drills
+      - Sprayers
+      - Tillage Equipment
+      - Hay and Forage Equipment
+      - Windrowers
+      - Grain Carts
+      - Nutrient Applicators
+      - Manure Spreaders
+      - Self-Propelled Forage Harvesters
+      - Mowers
+      - Rakes
+      - Tedders
+      - Precision Agriculture Technology
+      - GPS Guidance Systems
+      - Telematics and Remote Monitoring
+      - Data Management Platforms
+      - Drones and Sensors
+      - Backhoe Loaders
+      - Excavators
+      - Dozers
+      - Motor Graders
+      - Skid Steer Loaders
+      - Compact Track Loaders
+      - Wheel Loaders
+      - Articulated Dump Trucks
+      - Scrapers
+      - Trenchers
+      - Pipeline Equipment
+      - Forestry Feller Bunchers
+      - Forestry Harvesters
+      - Forwarders
+      - Skidders
+      - Swing Machines
+      - Log Loaders
+      - Knuckleboom Loaders
+      - Forestry Attachments
+      - Mulchers
+      - Riding Lawn Mowers
+      - Zero-Turn Mowers
+      - Commercial Mowers
+      - Golf Course Equipment
+      - Aerators
+      - Utility Tractors
+      - Gator Utility Vehicles
+      - Snow Removal Equipment
+      - Diesel Engines
+      - Gasoline Engines
+      - Generator Drive Engines
+      - Drivetrain Components
+      - Transmissions
+      - Axles
+      - Attachments
+      - Parts and Aftermarket Support
+      - Software Solutions
+      - Digital Platforms
+      - Autonomous Equipment
+      - Financial Services
+
+
+  - name: AGCO
+    keywords: ["AGCO"]
+    websites: ["agcocorp.com"]
+    categories:
+      - Corporate Strategy
+      - Financial Performance
+      - New Product Launches
+      - Technology & Innovation
+      - Sustainability & Environment
+      - Legal & Regulatory
+      - Supply Chain & Manufacturing
+      - Workforce & Labor
+      - Research & Development
+      - Customer & Community Engagement
+      - Marketing & Branding
+      - Partnerships & Alliances
+      - Risk Management & Challenges
+      - Market Trends & Industry Outlook
+    subcategories:
+      - Product Launch
+      - Technology Launch
+      - Price Change
+      - Policy Change
+      - Strategic Partnerships
+      - Mergers & Acquisitions
+      - Financial Results
+      - Stock Performance
+      - Investment Announcements
+      - Leadership Changes
+      - New Market Entry
+      - Production Expansion
+      - Supply Chain Disruptions
+      - Right-to-Repair Updates
+      - Environmental Regulations
+      - Sustainability Initiatives
+      - Carbon Neutrality Goals
+      - Electric/Hybrid Vehicle Launches
+      - Autonomous Machinery Deployment
+      - Precision Agriculture Solutions
+      - IoT and Telematics Integration
+      - Software/Platform Releases
+      - Subscription Services Rollout
+      - Labor Relations & Strikes
+      - Workforce Training Programs
+      - Diversity & Inclusion Initiatives
+      - Corporate Social Responsibility Programs
+      - Farmer Education & Outreach
+      - Community Support Projects
+      - Event Participation
+      - Awards & Recognitions
+      - Cybersecurity Developments
+      - Climate Impact Reports
+      - Commodity Price Fluctuations
+      - Market Forecast Reports
+      - Government Subsidies & Incentives
+      - Public-Private Partnerships
+      - Export/Import Policy Changes
+      - Patent Filings & R&D Breakthroughs
+      - Dealer Network Expansion
+      - Financing & Leasing Programs
+      - Customer Experience Enhancements
+      - Warranty & Service Policy Updates
+      - Brand Campaign Launches
+      - Digital Marketing Initiatives
+      - Competitor Activity & Market Share Updates
+    product_lines:
+      - Tractors
+      - Combine Harvesters
+      - Forage Harvesters
+      - Cotton Harvesters
+      - Sugar Cane Harvesters
+      - Balers
+      - Planters
+      - Seed Drills
+      - Sprayers
+      - Tillage Equipment
+      - Hay and Forage Equipment
+      - Windrowers
+      - Grain Carts
+      - Nutrient Applicators
+      - Manure Spreaders
+      - Self-Propelled Forage Harvesters
+      - Mowers
+      - Rakes
+      - Tedders
+      - Precision Agriculture Technology
+      - GPS Guidance Systems
+      - Telematics and Remote Monitoring
+      - Data Management Platforms
+      - Drones and Sensors
+      - Backhoe Loaders
+      - Excavators
+      - Dozers
+      - Motor Graders
+      - Skid Steer Loaders
+      - Compact Track Loaders
+      - Wheel Loaders
+      - Articulated Dump Trucks
+      - Scrapers
+      - Trenchers
+      - Pipeline Equipment
+      - Forestry Feller Bunchers
+      - Forestry Harvesters
+      - Forwarders
+      - Skidders
+      - Swing Machines
+      - Log Loaders
+      - Knuckleboom Loaders
+      - Forestry Attachments
+      - Mulchers
+      - Riding Lawn Mowers
+      - Zero-Turn Mowers
+      - Commercial Mowers
+      - Golf Course Equipment
+      - Aerators
+      - Utility Tractors
+      - Gator Utility Vehicles
+      - Snow Removal Equipment
+      - Diesel Engines
+      - Gasoline Engines
+      - Generator Drive Engines
+      - Drivetrain Components
+      - Transmissions
+      - Axles
+      - Attachments
+      - Parts and Aftermarket Support
+      - Software Solutions
+      - Digital Platforms
+      - Autonomous Equipment
+      - Financial Services
+
+
+  - name: CLAAS
+    keywords: ["CLAAS"]
+    websites: ["claas.com"]
+    categories:
+      - Corporate Strategy
+      - Financial Performance
+      - New Product Launches
+      - Technology & Innovation
+      - Sustainability & Environment
+      - Legal & Regulatory
+      - Supply Chain & Manufacturing
+      - Workforce & Labor
+      - Research & Development
+      - Customer & Community Engagement
+      - Marketing & Branding
+      - Partnerships & Alliances
+      - Risk Management & Challenges
+      - Market Trends & Industry Outlook
+    subcategories:
+      - Product Launch
+      - Technology Launch
+      - Price Change
+      - Policy Change
+      - Strategic Partnerships
+      - Mergers & Acquisitions
+      - Financial Results
+      - Stock Performance
+      - Investment Announcements
+      - Leadership Changes
+      - New Market Entry
+      - Production Expansion
+      - Supply Chain Disruptions
+      - Right-to-Repair Updates
+      - Environmental Regulations
+      - Sustainability Initiatives
+      - Carbon Neutrality Goals
+      - Electric/Hybrid Vehicle Launches
+      - Autonomous Machinery Deployment
+      - Precision Agriculture Solutions
+      - IoT and Telematics Integration
+      - Software/Platform Releases
+      - Subscription Services Rollout
+      - Labor Relations & Strikes
+      - Workforce Training Programs
+      - Diversity & Inclusion Initiatives
+      - Corporate Social Responsibility Programs
+      - Farmer Education & Outreach
+      - Community Support Projects
+      - Event Participation
+      - Awards & Recognitions
+      - Cybersecurity Developments
+      - Climate Impact Reports
+      - Commodity Price Fluctuations
+      - Market Forecast Reports
+      - Government Subsidies & Incentives
+      - Public-Private Partnerships
+      - Export/Import Policy Changes
+      - Patent Filings & R&D Breakthroughs
+      - Dealer Network Expansion
+      - Financing & Leasing Programs
+      - Customer Experience Enhancements
+      - Warranty & Service Policy Updates
+      - Brand Campaign Launches
+      - Digital Marketing Initiatives
+      - Competitor Activity & Market Share Updates
+    product_lines:
+      - Tractors
+      - Combine Harvesters
+      - Forage Harvesters
+      - Cotton Harvesters
+      - Sugar Cane Harvesters
+      - Balers
+      - Planters
+      - Seed Drills
+      - Sprayers
+      - Tillage Equipment
+      - Hay and Forage Equipment
+      - Windrowers
+      - Grain Carts
+      - Nutrient Applicators
+      - Manure Spreaders
+      - Self-Propelled Forage Harvesters
+      - Mowers
+      - Rakes
+      - Tedders
+      - Precision Agriculture Technology
+      - GPS Guidance Systems
+      - Telematics and Remote Monitoring
+      - Data Management Platforms
+      - Drones and Sensors
+      - Backhoe Loaders
+      - Excavators
+      - Dozers
+      - Motor Graders
+      - Skid Steer Loaders
+      - Compact Track Loaders
+      - Wheel Loaders
+      - Articulated Dump Trucks
+      - Scrapers
+      - Trenchers
+      - Pipeline Equipment
+      - Forestry Feller Bunchers
+      - Forestry Harvesters
+      - Forwarders
+      - Skidders
+      - Swing Machines
+      - Log Loaders
+      - Knuckleboom Loaders
+      - Forestry Attachments
+      - Mulchers
+      - Riding Lawn Mowers
+      - Zero-Turn Mowers
+      - Commercial Mowers
+      - Golf Course Equipment
+      - Aerators
+      - Utility Tractors
+      - Gator Utility Vehicles
+      - Snow Removal Equipment
+      - Diesel Engines
+      - Gasoline Engines
+      - Generator Drive Engines
+      - Drivetrain Components
+      - Transmissions
+      - Axles
+      - Attachments
+      - Parts and Aftermarket Support
+      - Software Solutions
+      - Digital Platforms
+      - Autonomous Equipment
+      - Financial Services
+
+
+  - name: Caterpillar Inc
+    keywords: ["Caterpillar Inc"]
+    websites: ["caterpillar.com"]
+    categories:
+      - Corporate Strategy
+      - Financial Performance
+      - New Product Launches
+      - Technology & Innovation
+      - Sustainability & Environment
+      - Legal & Regulatory
+      - Supply Chain & Manufacturing
+      - Workforce & Labor
+      - Research & Development
+      - Customer & Community Engagement
+      - Marketing & Branding
+      - Partnerships & Alliances
+      - Risk Management & Challenges
+      - Market Trends & Industry Outlook
+    subcategories:
+      - Product Launch
+      - Technology Launch
+      - Price Change
+      - Policy Change
+      - Strategic Partnerships
+      - Mergers & Acquisitions
+      - Financial Results
+      - Stock Performance
+      - Investment Announcements
+      - Leadership Changes
+      - New Market Entry
+      - Production Expansion
+      - Supply Chain Disruptions
+      - Right-to-Repair Updates
+      - Environmental Regulations
+      - Sustainability Initiatives
+      - Carbon Neutrality Goals
+      - Electric/Hybrid Vehicle Launches
+      - Autonomous Machinery Deployment
+      - Precision Agriculture Solutions
+      - IoT and Telematics Integration
+      - Software/Platform Releases
+      - Subscription Services Rollout
+      - Labor Relations & Strikes
+      - Workforce Training Programs
+      - Diversity & Inclusion Initiatives
+      - Corporate Social Responsibility Programs
+      - Farmer Education & Outreach
+      - Community Support Projects
+      - Event Participation
+      - Awards & Recognitions
+      - Cybersecurity Developments
+      - Climate Impact Reports
+      - Commodity Price Fluctuations
+      - Market Forecast Reports
+      - Government Subsidies & Incentives
+      - Public-Private Partnerships
+      - Export/Import Policy Changes
+      - Patent Filings & R&D Breakthroughs
+      - Dealer Network Expansion
+      - Financing & Leasing Programs
+      - Customer Experience Enhancements
+      - Warranty & Service Policy Updates
+      - Brand Campaign Launches
+      - Digital Marketing Initiatives
+      - Competitor Activity & Market Share Updates
+    product_lines:
+      - Tractors
+      - Combine Harvesters
+      - Forage Harvesters
+      - Cotton Harvesters
+      - Sugar Cane Harvesters
+      - Balers
+      - Planters
+      - Seed Drills
+      - Sprayers
+      - Tillage Equipment
+      - Hay and Forage Equipment
+      - Windrowers
+      - Grain Carts
+      - Nutrient Applicators
+      - Manure Spreaders
+      - Self-Propelled Forage Harvesters
+      - Mowers
+      - Rakes
+      - Tedders
+      - Precision Agriculture Technology
+      - GPS Guidance Systems
+      - Telematics and Remote Monitoring
+      - Data Management Platforms
+      - Drones and Sensors
+      - Backhoe Loaders
+      - Excavators
+      - Dozers
+      - Motor Graders
+      - Skid Steer Loaders
+      - Compact Track Loaders
+      - Wheel Loaders
+      - Articulated Dump Trucks
+      - Scrapers
+      - Trenchers
+      - Pipeline Equipment
+      - Forestry Feller Bunchers
+      - Forestry Harvesters
+      - Forwarders
+      - Skidders
+      - Swing Machines
+      - Log Loaders
+      - Knuckleboom Loaders
+      - Forestry Attachments
+      - Mulchers
+      - Riding Lawn Mowers
+      - Zero-Turn Mowers
+      - Commercial Mowers
+      - Golf Course Equipment
+      - Aerators
+      - Utility Tractors
+      - Gator Utility Vehicles
+      - Snow Removal Equipment
+      - Diesel Engines
+      - Gasoline Engines
+      - Generator Drive Engines
+      - Drivetrain Components
+      - Transmissions
+      - Axles
+      - Attachments
+      - Parts and Aftermarket Support
+      - Software Solutions
+      - Digital Platforms
+      - Autonomous Equipment
+      - Financial Services
+
+
+  - name: Komatsu
+    keywords: ["Komatsu"]
+    websites: ["komatsu.com"]
+    categories:
+      - Corporate Strategy
+      - Financial Performance
+      - New Product Launches
+      - Technology & Innovation
+      - Sustainability & Environment
+      - Legal & Regulatory
+      - Supply Chain & Manufacturing
+      - Workforce & Labor
+      - Research & Development
+      - Customer & Community Engagement
+      - Marketing & Branding
+      - Partnerships & Alliances
+      - Risk Management & Challenges
+      - Market Trends & Industry Outlook
+    subcategories:
+      - Product Launch
+      - Technology Launch
+      - Price Change
+      - Policy Change
+      - Strategic Partnerships
+      - Mergers & Acquisitions
+      - Financial Results
+      - Stock Performance
+      - Investment Announcements
+      - Leadership Changes
+      - New Market Entry
+      - Production Expansion
+      - Supply Chain Disruptions
+      - Right-to-Repair Updates
+      - Environmental Regulations
+      - Sustainability Initiatives
+      - Carbon Neutrality Goals
+      - Electric/Hybrid Vehicle Launches
+      - Autonomous Machinery Deployment
+      - Precision Agriculture Solutions
+      - IoT and Telematics Integration
+      - Software/Platform Releases
+      - Subscription Services Rollout
+      - Labor Relations & Strikes
+      - Workforce Training Programs
+      - Diversity & Inclusion Initiatives
+      - Corporate Social Responsibility Programs
+      - Farmer Education & Outreach
+      - Community Support Projects
+      - Event Participation
+      - Awards & Recognitions
+      - Cybersecurity Developments
+      - Climate Impact Reports
+      - Commodity Price Fluctuations
+      - Market Forecast Reports
+      - Government Subsidies & Incentives
+      - Public-Private Partnerships
+      - Export/Import Policy Changes
+      - Patent Filings & R&D Breakthroughs
+      - Dealer Network Expansion
+      - Financing & Leasing Programs
+      - Customer Experience Enhancements
+      - Warranty & Service Policy Updates
+      - Brand Campaign Launches
+      - Digital Marketing Initiatives
+      - Competitor Activity & Market Share Updates
+    product_lines:
+      - Tractors
+      - Combine Harvesters
+      - Forage Harvesters
+      - Cotton Harvesters
+      - Sugar Cane Harvesters
+      - Balers
+      - Planters
+      - Seed Drills
+      - Sprayers
+      - Tillage Equipment
+      - Hay and Forage Equipment
+      - Windrowers
+      - Grain Carts
+      - Nutrient Applicators
+      - Manure Spreaders
+      - Self-Propelled Forage Harvesters
+      - Mowers
+      - Rakes
+      - Tedders
+      - Precision Agriculture Technology
+      - GPS Guidance Systems
+      - Telematics and Remote Monitoring
+      - Data Management Platforms
+      - Drones and Sensors
+      - Backhoe Loaders
+      - Excavators
+      - Dozers
+      - Motor Graders
+      - Skid Steer Loaders
+      - Compact Track Loaders
+      - Wheel Loaders
+      - Articulated Dump Trucks
+      - Scrapers
+      - Trenchers
+      - Pipeline Equipment
+      - Forestry Feller Bunchers
+      - Forestry Harvesters
+      - Forwarders
+      - Skidders
+      - Swing Machines
+      - Log Loaders
+      - Knuckleboom Loaders
+      - Forestry Attachments
+      - Mulchers
+      - Riding Lawn Mowers
+      - Zero-Turn Mowers
+      - Commercial Mowers
+      - Golf Course Equipment
+      - Aerators
+      - Utility Tractors
+      - Gator Utility Vehicles
+      - Snow Removal Equipment
+      - Diesel Engines
+      - Gasoline Engines
+      - Generator Drive Engines
+      - Drivetrain Components
+      - Transmissions
+      - Axles
+      - Attachments
+      - Parts and Aftermarket Support
+      - Software Solutions
+      - Digital Platforms
+      - Autonomous Equipment
+      - Financial Services

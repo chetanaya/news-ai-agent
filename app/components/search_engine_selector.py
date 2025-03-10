@@ -54,7 +54,7 @@ def search_engine_selector():
             st.success(f"Default search engine set to {selected_engine}")
             
             # Rerun to update the interface
-            st.experimental_rerun()
+            st.rerun()
     
     return selected_engine
 

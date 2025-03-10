@@ -1,7 +1,7 @@
 default_search_engine: DuckDuckGo
 news_sources:
 - api_endpoint: https://news.google.com/rss/search?q={keyword}&hl=en-US&gl=US&ceid=US:en
-  enabled: true
+  enabled: false
   name: Google News
   type: rss
 - api_endpoint: https://newsapi.org/v2/everything
@@ -16,8 +16,8 @@ news_sources:
 - enabled: true
   name: DuckDuckGo
   params:
-    max_results: 10
+    max_results: 30
     region: us-en
-    safesearch: moderate
+    safesearch: 'on'
     timelimit: w
   type: duckduckgo

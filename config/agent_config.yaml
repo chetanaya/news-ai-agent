@@ -1,17 +1,57 @@
 analysis_config:
   sentiment_threshold_negative: -0.1
   sentiment_threshold_positive: 0.1
-  summary_max_words: 250
+  sentiment_values:
+    negative: Negative
+    neutral: Neutral
+    positive: Positive
+  show_only_relevant: true
+  summary_max_words: 150
   summary_min_words: 100
+duckduckgo_regions:
+- id: us-en
+  name: United States (English)
+- id: uk-en
+  name: United Kingdom (English)
+- id: ca-en
+  name: Canada (English)
+- id: de-de
+  name: Germany (German)
+- id: au-en
+  name: Australia (English)
+- id: fr-fr
+  name: France (French)
+- id: in-en
+  name: India (English)
+- id: es-es
+  name: Spain (Spanish)
+- id: br-pt
+  name: Brazil (Portuguese)
+- id: mx-es
+  name: Mexico (Spanish)
+- id: it-it
+  name: Italy (Italian)
+- id: jp-jp
+  name: Japan (Japanese)
+- id: kr-kr
+  name: Korea (Korean)
+- id: ru-ru
+  name: Russia (Russian)
+- id: wt-wt
+  name: Global (All Languages)
 fetch_config:
-  max_articles_per_brand: 10
+  max_articles_per_brand: 50
   news_refresh_interval: 3600
   request_timeout: 10
   retry_count: 3
   retry_delay: 2
   user_agent: BrandNewsAnalyzer/1.0
 llm:
-  api_key: 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
+  available_models:
+  - gpt-4
+  - gpt-4-turbo
+  - gpt-3.5-turbo
+  - gpt-4o-mini
   model_name: gpt-4o-mini
   provider: openai
 storage_config:
