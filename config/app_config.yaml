@@ -1,0 +1,22 @@
+app:
+  title: "Brand News Analyzer"
+  description: "Track and analyze latest news about your favorite brands"
+  theme:
+    primary_color: "#4CAF50"
+    secondary_color: "#2196F3"
+    background_color: "#F5F5F5"
+  
+dashboard:
+  default_view: "latest"
+  charts:
+    - id: "sentiment_distribution"
+      type: "pie"
+      title: "Sentiment Distribution"
+    
+    - id: "topics_distribution"
+      type: "bar"
+      title: "Topics Distribution"
+      
+    - id: "polarity_trend"
+      type: "line"
+      title: "Polarity Trend Over Time"
