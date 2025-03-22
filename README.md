@@ -32,8 +32,8 @@ The application consists of several key components:
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/brand-news-analyzer.git
-   cd brand-news-analyzer
+   git clone https://github.com/chetanaya/news-ai-agent.git
+   cd news-ai-agent
    ```
 
 2. Install dependencies:
